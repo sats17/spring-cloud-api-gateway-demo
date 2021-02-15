@@ -2,6 +2,7 @@ package com.github.sats17.route;
 
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
+import org.springframework.cloud.gateway.route.builder.UriSpec;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,6 +17,7 @@ public class GatewayRoutes {
 	private String customerRootPath = "/customer";
 	private String customerTestPath = "/customer/test";
 	private String customerNestedTestPath = "/customer/test/test2";
+	
 	private String customerSinglePredicatePath = "/customer/*";
 	private String customerNestedPredicatePath = "/customer/**";
 	
@@ -24,6 +26,7 @@ public class GatewayRoutes {
 	private String clientNestedTestPath = "/client/test/test2";
 	private String clientSinglePredicatePath = "/client/*";
 	private String clientNestedPredicatePath = "/client/**";
+	private String preDefinedFilterPath = "/filters/predefined";
 	
 
 	@Bean
@@ -53,6 +56,8 @@ public class GatewayRoutes {
 					   * the same to customerHost
 					   */
 					  .route(r -> r.path(customerNestedPredicatePath).uri(customerHost).id("routeNestedPredicateTestPath"))
+					  
+					  
 					 
 					  /**
 					   * Client host routes
@@ -78,7 +83,20 @@ public class GatewayRoutes {
 					   * the same to clientHost
 					   */
 					  .route(r -> r.path(clientNestedPredicatePath).uri(clientHost).id("routeclientNestedPredicateTestPath"))
+					  /**
+					   * Route fetched heros by default
+					   */
+					  .route("filter",r -> r.path(preDefinedFilterPath)
+							  				.filters(fn -> fn.addRequestHeader("filters", "heros"))
+	  							.uri(clientHost))
+					  
+					  
 					  .build();
+	}
+	
+	public void ab() {
+		System.out.println("ab");
+//		return null;
 	}
 
 }
