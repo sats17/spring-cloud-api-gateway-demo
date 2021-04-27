@@ -91,6 +91,9 @@ public class GatewayRoutes {
 					  .route("filter",r -> r.path(preDefinedFilterPath)
 							  				.filters(fn -> fn.addRequestHeader("filters", "heros"))
 							  				.uri(clientHost))
+					  /*
+					   * Convert requested path with different downstream path
+					   */
 					  .route("rewritepath", r -> r.path(preDefinedRewritePath)
 							  					  .filters(fn -> fn.rewritePath(preDefinedRewritePath, preDefinedFilterPath))
 							  					  .uri(clientHost))
