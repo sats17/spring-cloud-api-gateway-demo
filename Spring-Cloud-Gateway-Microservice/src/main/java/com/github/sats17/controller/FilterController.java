@@ -3,6 +3,9 @@ package com.github.sats17.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,21 +29,25 @@ public class FilterController<E> {
 	VillanLayer villansLayer;
 	
 	@GetMapping("/predefined")
-	public Response getFilterResponse(@RequestHeader(value = "filters", required = true) String filter) {
-		if(filter == "villan") {
+	public ResponseEntity<Response> getFilterResponse(@RequestHeader(value = "filters", required = true) String filter) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("resonseHeaderFromMicroserive", "HeaderValue");
+		if(filter.equals("villans")) {
 			Tag<Villans> villans = new Tag<>();
 			villans.setStatus("The call has return villans list");
 			villans.setResponse(villansLayer.findAll());
 			Response response = new Response();
 			response.setTag(villans);
-			return response;
+			ResponseEntity<Response> entity = new ResponseEntity<Response>(response, headers, HttpStatus.OK);
+			return entity;
 		}
 		Tag<Heros> heros = new Tag<>();
 		heros.setStatus("The call has return heros list");
 		heros.setResponse(herosLayer.findAll());
 		Response response = new Response();
 		response.setTag(heros);
-		return response;
+		ResponseEntity<Response> entity = new ResponseEntity<Response>(response, headers, HttpStatus.OK);
+		return entity;
 	}
 
 }

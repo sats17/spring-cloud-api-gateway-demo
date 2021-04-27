@@ -1,0 +1,28 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: yamlbase
+          uri: http://localhost:8091
+          predicates:
+            - Path=/rewrite/yamlbase
+          filters:
+            - RewritePath=/rewrite/yamlbase, /filters/predefined
+    consul:
+#      host: http://localhost:8500
+      host: localhost
+#      port: 443
+      port: 8500
+      config:
+        data-key: file
+        format: yaml
+        profile-separator: /
+        enabled: false
+        failFast: true
+#        acl-token: ${consul_acl_token}
+        prefix: config
+        defaultContext: spring-cloud-gateway-demo
+        watch:
+          enabled: true
+          
+

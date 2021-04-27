@@ -1,5 +1,6 @@
 package com.github.sats17.route;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.cloud.gateway.route.builder.UriSpec;
@@ -8,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class GatewayRoutes {
-
+	
 	private String customerHost = "http://localhost:8091";
 	private String clientHost = "http://localhost:8091";
 	
@@ -17,7 +18,6 @@ public class GatewayRoutes {
 	private String customerRootPath = "/customer";
 	private String customerTestPath = "/customer/test";
 	private String customerNestedTestPath = "/customer/test/test2";
-	
 	private String customerSinglePredicatePath = "/customer/*";
 	private String customerNestedPredicatePath = "/customer/**";
 	
@@ -27,6 +27,8 @@ public class GatewayRoutes {
 	private String clientSinglePredicatePath = "/client/*";
 	private String clientNestedPredicatePath = "/client/**";
 	private String preDefinedFilterPath = "/filters/predefined";
+	
+	private String preDefinedRewritePath = "/rewrite/filters";
 	
 
 	@Bean
@@ -88,15 +90,12 @@ public class GatewayRoutes {
 					   */
 					  .route("filter",r -> r.path(preDefinedFilterPath)
 							  				.filters(fn -> fn.addRequestHeader("filters", "heros"))
-	  							.uri(clientHost))
-					  
-					  
+							  				.uri(clientHost))
+					  .route("rewritepath", r -> r.path(preDefinedRewritePath)
+							  					  .filters(fn -> fn.rewritePath(preDefinedRewritePath, preDefinedFilterPath))
+							  					  .uri(clientHost))
 					  .build();
-	}
-	
-	public void ab() {
-		System.out.println("ab");
-//		return null;
+					 
 	}
 
 }
