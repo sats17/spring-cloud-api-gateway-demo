@@ -10,8 +10,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class GatewayRoutes {
 	
-	private String customerHost = "http://localhost:8091";
-	private String clientHost = "http://localhost:8091";
+	@Value("${customerHost}")
+	private String customerHost;
+	
+	@Value("${clientHost}")
+	private String clientHost;
 	
 	private String rootPath = "/";
 	
@@ -27,8 +30,11 @@ public class GatewayRoutes {
 	private String clientSinglePredicatePath = "/client/*";
 	private String clientNestedPredicatePath = "/client/**";
 	private String preDefinedFilterPath = "/filters/predefined";
+	private String preDefinedFilterPathWithQueryParam = "/filters/predefinedwithparam";
 	
 	private String preDefinedRewritePath = "/rewrite/filters";
+	private String preDefinedRewritePathForQueryParam = "/rewrite/filters/queryparam";
+	
 	
 
 	@Bean
@@ -97,6 +103,10 @@ public class GatewayRoutes {
 					  .route("rewritepath", r -> r.path(preDefinedRewritePath)
 							  					  .filters(fn -> fn.rewritePath(preDefinedRewritePath, preDefinedFilterPath))
 							  					  .uri(clientHost))
+					  
+					  .route("rewritepathwithqueryparam", r -> r.path(preDefinedRewritePathForQueryParam)
+		  					  .filters(fn -> fn.rewritePath(preDefinedRewritePathForQueryParam, preDefinedFilterPathWithQueryParam))
+		  					  .uri(clientHost))
 					  .build();
 					 
 	}

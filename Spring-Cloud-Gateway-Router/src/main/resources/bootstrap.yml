@@ -1,6 +1,15 @@
+server.port: 8092
+
+customerHost: http://localhost:8093
+clientHost: http://localhost:8093
+
 spring:
   cloud:
     gateway:
+      httpclient:
+        wiretap: true
+      httpserver:
+        wiretap: true
       routes:
         - id: yamlbase
           uri: http://localhost:8091
@@ -24,5 +33,14 @@ spring:
         defaultContext: spring-cloud-gateway-demo
         watch:
           enabled: true
+          
+logging:
+  level:
+    reactor:
+      netty: INFO
+    org:
+      springframework:
+        cloud:
+          gateway: TRACE
           
 
