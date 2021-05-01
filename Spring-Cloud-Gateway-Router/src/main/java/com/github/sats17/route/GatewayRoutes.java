@@ -1,5 +1,6 @@
 package com.github.sats17.route;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
@@ -7,14 +8,22 @@ import org.springframework.cloud.gateway.route.builder.UriSpec;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.github.sats17.filters.PreFilters;
+
 @Configuration
 public class GatewayRoutes {
 	
-	@Value("${customerHost}")
+	@Value("${customer.host}")
 	private String customerHost;
 	
-	@Value("${clientHost}")
+	@Value("${client.host}")
 	private String clientHost;
+	
+	@Value("${client.api-key}")
+	private String clientApiKey;
+	
+	@Autowired
+	private PreFilters prefilters;
 	
 	private String rootPath = "/";
 	
@@ -35,6 +44,7 @@ public class GatewayRoutes {
 	private String preDefinedRewritePath = "/rewrite/filters";
 	private String preDefinedRewritePathForQueryParam = "/rewrite/filters/queryparam";
 	
+	private String customPreDefinedFilterPath = "/secured/predefined"; 
 	
 
 	@Bean
@@ -103,9 +113,18 @@ public class GatewayRoutes {
 					  .route("rewritepath", r -> r.path(preDefinedRewritePath)
 							  					  .filters(fn -> fn.rewritePath(preDefinedRewritePath, preDefinedFilterPath))
 							  					  .uri(clientHost))
-					  
+					  /*
+					   * Simple add query parameters to this path, microservice needs those query params
+					   */
 					  .route("rewritepathwithqueryparam", r -> r.path(preDefinedRewritePathForQueryParam)
 		  					  .filters(fn -> fn.rewritePath(preDefinedRewritePathForQueryParam, preDefinedFilterPathWithQueryParam))
+		  					  .uri(clientHost))
+					  
+					  /*
+					   * Custom predefined filters
+					   */
+					  .route("custompredefinedfiters", r -> r.path(customPreDefinedFilterPath)
+							  .filters(fn -> fn.filter(prefilters.apply(s -> s.setAPIKEY(clientApiKey))))
 		  					  .uri(clientHost))
 					  .build();
 					 

@@ -1,7 +1,11 @@
 server.port: 8092
 
-customerHost: http://localhost:8093
-clientHost: http://localhost:8093
+customer:
+  host: http://localhost:8093
+  api-key: thebestsecret
+client:
+  host: http://localhost:8093
+  api-key: thebestsecret
 
 spring:
   cloud:
@@ -33,11 +37,12 @@ spring:
         defaultContext: spring-cloud-gateway-demo
         watch:
           enabled: true
+
           
 logging:
   level:
     reactor:
-      netty: INFO
+      netty: DEBUG
     org:
       springframework:
         cloud:
