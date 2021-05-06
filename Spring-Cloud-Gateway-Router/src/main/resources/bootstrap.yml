@@ -7,6 +7,12 @@ client:
   host: http://localhost:8093
   api-key: thebestsecret
 
+uriparampaths:
+  requestpath: /rewrite/test/**
+  rewritepaths:
+    downstreampath: /client/test/$\{name}/information
+    requestpath: /rewrite/test/(?<name>.*)
+
 spring:
   cloud:
     gateway:

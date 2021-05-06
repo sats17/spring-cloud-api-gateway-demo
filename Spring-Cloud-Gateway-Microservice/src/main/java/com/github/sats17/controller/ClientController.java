@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,8 +25,15 @@ public class ClientController {
 		return "client test path response";
 	}
 	
+	@GetMapping("/test/{name}/information")
+	public String testUriPath(@PathVariable("name") String name) {
+		
+		return "Got response from path variable "+name+" param";
+	}
+	
 	@GetMapping("")
 	public String rootPath() {
+		System.out.println("Received client");
 		return "client root path response";
 	}
 	

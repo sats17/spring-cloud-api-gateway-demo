@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.github.sats17.filters.PreFilters;
+import com.github.sats17.filters.TestFilter;
 
 @Configuration
 public class GatewayRoutes {
@@ -24,6 +25,9 @@ public class GatewayRoutes {
 	
 	@Autowired
 	private PreFilters prefilters;
+	
+	@Autowired
+	private TestFilter testFilters;
 	
 	private String rootPath = "/";
 	
@@ -45,6 +49,15 @@ public class GatewayRoutes {
 	private String preDefinedRewritePathForQueryParam = "/rewrite/filters/queryparam";
 	
 	private String customPreDefinedFilterPath = "/secured/predefined"; 
+	
+	@Value("${uriparampaths.requestpath}")
+	private String uripathrequestpath;
+	
+	@Value("${uriparampaths.rewritepaths.downstreampath}")
+	private String uripathrequestdownstreampath;
+	
+	@Value("${uriparampaths.rewritepaths.requestpath}")
+	private String uripathrequestrewritepath;
 	
 
 	@Bean
@@ -116,15 +129,27 @@ public class GatewayRoutes {
 					  /*
 					   * Simple add query parameters to this path, microservice needs those query params
 					   */
+					  
 					  .route("rewritepathwithqueryparam", r -> r.path(preDefinedRewritePathForQueryParam)
 		  					  .filters(fn -> fn.rewritePath(preDefinedRewritePathForQueryParam, preDefinedFilterPathWithQueryParam))
 		  					  .uri(clientHost))
 					  
+					  /**
+					   * Additional test route for below rewrite route
+					   */
+					  .route(r -> r.path("/rewrite/test/abc").filters(fn -> fn.rewritePath("/rewrite/test/abc", clientNestedTestPath)).uri(clientHost).id("routeclientNestedPredicateTestPath"))
+					  /**
+					   * Rewrite path with uri params
+					   */
+					  .route("rewritepathwithpathvariable", r -> r.path(uripathrequestpath)
+		  					  .filters(fn -> fn.rewritePath(uripathrequestrewritepath, uripathrequestdownstreampath))
+		  					  .uri(clientHost))
 					  /*
 					   * Custom predefined filters
 					   */
 					  .route("custompredefinedfiters", r -> r.path(customPreDefinedFilterPath)
-							  .filters(fn -> fn.filter(prefilters.apply(s -> s.setAPIKEY(clientApiKey))))
+							  .filters(fn -> fn.filter(prefilters.apply(s -> s.setAPIKEY(clientApiKey)))
+									  		   .filter(testFilters.apply(s -> s.setAPIKEY("test"))))
 		  					  .uri(clientHost))
 					  .build();
 					 

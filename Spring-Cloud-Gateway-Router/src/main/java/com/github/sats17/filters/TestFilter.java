@@ -2,6 +2,9 @@ package com.github.sats17.filters;
 
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 
 import com.github.sats17.filters.PreFilters.Config;
@@ -31,9 +34,10 @@ public class TestFilter extends AbstractGatewayFilterFactory<TestFilter.Config> 
 	public GatewayFilter apply(Config config) {
 		return (exchange, chain) -> {
 			System.out.println("Request => "+exchange.getRequest().getHeaders());
-			System.out.println("Pre filters applied");
-			return null;
-			
+			System.out.println("Test filters applied");
+			ServerHttpRequest request = exchange.getRequest().mutate().header("key", config.getAPIKEY()).build();
+//			return chain.filter(exchange.mutate().request(request).build());	
+			return chain.filter(exchange.mutate().request(request).build());
 		};
 	}
 }

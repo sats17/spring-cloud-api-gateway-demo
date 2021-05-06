@@ -1,5 +1,9 @@
-customerHost: http://localhost:${mock.downstream.port}
-clientHost: http://localhost:${mock.downstream.port}
+customer:
+  host: http://localhost:${mock.downstream.port}
+  api-key: thebestsecret
+client:
+  host: http://localhost:${mock.downstream.port}
+  api-key: thebestsecret
 
 mock:
   downstream:
