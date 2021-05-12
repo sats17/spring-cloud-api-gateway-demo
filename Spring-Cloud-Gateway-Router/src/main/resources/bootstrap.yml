@@ -7,6 +7,8 @@ client:
   host: http://localhost:8093
   api-key: thebestsecret
 
+# For specially for URI paths exchange
+# Not implemented in routes
 uriparampaths:
   requestpath: /rewrite/test/**
   rewritepaths:

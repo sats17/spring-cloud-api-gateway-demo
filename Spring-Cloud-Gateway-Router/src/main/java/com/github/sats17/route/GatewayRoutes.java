@@ -7,9 +7,15 @@ import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.cloud.gateway.route.builder.UriSpec;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.sats17.filters.PreFilters;
 import com.github.sats17.filters.TestFilter;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Configuration
 public class GatewayRoutes {
@@ -28,6 +34,9 @@ public class GatewayRoutes {
 	
 	@Autowired
 	private TestFilter testFilters;
+	
+//	@Autowired
+//	private ModifyResponseFilter modifyResponseFilter;
 	
 	private String rootPath = "/";
 	

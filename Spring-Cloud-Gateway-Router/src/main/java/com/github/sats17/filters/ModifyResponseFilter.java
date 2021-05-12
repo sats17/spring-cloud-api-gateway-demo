@@ -2,29 +2,16 @@ package com.github.sats17.filters;
 
 import java.util.Optional;
 
-import org.reactivestreams.Publisher;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
-import org.springframework.core.io.buffer.DataBuffer;
-import org.springframework.core.io.buffer.DataBufferFactory;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import reactor.core.publisher.Mono;
 
 @Component
-public class PreFilters extends AbstractGatewayFilterFactory<PreFilters.Config> {
-	
-	public PreFilters() {
-		super(Config.class);
-	}
+public class ModifyResponseFilter extends AbstractGatewayFilterFactory<ModifyResponseFilter.Config> {
 
 	public static class Config {
 		private String APIKEY;
@@ -37,11 +24,6 @@ public class PreFilters extends AbstractGatewayFilterFactory<PreFilters.Config> 
 			APIKEY = aPIKEY;
 		}
 	}
-	
-	WebClient webClient = WebClient.builder()
-	        .baseUrl("http://localhost:8093")
-	        .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-	        .build();
 
 	@Override
 	public GatewayFilter apply(Config config) {
@@ -51,6 +33,7 @@ public class PreFilters extends AbstractGatewayFilterFactory<PreFilters.Config> 
 			 return chain.filter(exchange)
 		    	      .then(Mono.fromRunnable(() -> {
 		    	          ServerHttpResponse response = exchange.getResponse();
+
 		    	          Optional.ofNullable(exchange.getRequest()
 		    	            .getQueryParams()
 		    	            .getFirst("locale"))
@@ -60,10 +43,12 @@ public class PreFilters extends AbstractGatewayFilterFactory<PreFilters.Config> 
 		    	                  .getLanguage();
 
 		    	                response.getHeaders()
-		    	                  .add("Bael-Custom-Language-Header", responseContentLanguage);
+		    	                  .add("Test-header", responseContentLanguage);
 		    	                });
 		    	        }));
 		};
-	}
+		   
+	
+		}
 
 }

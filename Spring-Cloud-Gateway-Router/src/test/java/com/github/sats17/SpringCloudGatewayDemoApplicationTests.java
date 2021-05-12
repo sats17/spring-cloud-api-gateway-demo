@@ -62,7 +62,8 @@ class SpringCloudGatewayDemoApplicationTests {
 	public void testRootPath() throws Exception {
 		String downstreamresponse = readFileAsString("src/test/resources/Test.json");
 		mockWebServer.enqueue(new MockResponse().setResponseCode(200)
-				.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).setBody(downstreamresponse));
+				.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+				.setHeader(HttpHeaders.CONTENT_ENCODING, "br").setBody(downstreamresponse));
 
 		ResponseSpec response = client.get().uri("/client").exchange();
 
