@@ -4,7 +4,10 @@ customer:
   host: http://localhost:8093
   api-key: thebestsecret
 client:
-  host: http://localhost:8093
+  host: http://localhost:8092
+  api-key: thebestsecret
+users:
+  host: http://localhost:3000
   api-key: thebestsecret
 
 # For specially for URI paths exchange
@@ -54,6 +57,6 @@ logging:
     org:
       springframework:
         cloud:
-          gateway: TRACE
+          gateway: DEBUG
           
 
