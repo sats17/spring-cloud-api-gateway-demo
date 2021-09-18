@@ -2,14 +2,8 @@ package com.github.sats17.filters;
 
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
-
-import com.github.sats17.filters.PreFilters.Config;
-
-import reactor.core.publisher.Mono;
 
 @Component
 public class TestFilter extends AbstractGatewayFilterFactory<TestFilter.Config> {

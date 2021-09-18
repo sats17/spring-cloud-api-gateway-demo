@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.sats17.filters.ChooseBackendFilter;
+import com.github.sats17.filters.NoBackendHitFilter;
 import com.github.sats17.filters.PreFilters;
 import com.github.sats17.filters.TestFilter;
 
@@ -38,6 +39,9 @@ public class GatewayRoutes {
 	
 	@Autowired
 	private ChooseBackendFilter backendFilter;
+	
+	@Autowired
+	private NoBackendHitFilter noBackEndFilter;
 	
 //	@Autowired
 //	private ModifyResponseFilter modifyResponseFilter;
@@ -170,6 +174,9 @@ public class GatewayRoutes {
 					   */
 					  .route("healthCheck", r -> r.path("/healthcheck/*")
 							  .filters(fn -> fn.filter(backendFilter.apply(backendFilter.newConfig())))
+							  .uri("http://localhost:3000"))
+					  .route("noBackendHit", r -> r.path("/mockproxy")
+							  .filters(fn -> fn.filter(noBackEndFilter.apply(noBackEndFilter.newConfig())))
 							  .uri("http://localhost:3000"))
 					  .build();
 					 
